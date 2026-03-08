@@ -7,8 +7,8 @@ import { Observable, catchError, throwError, tap } from 'rxjs'; // Add tap here
   providedIn: 'root',
 })
 export class ApiService {
-  // Make sure port matches backend (8081)
-  private baseUrl = 'http://localhost:8081/api';
+  // Make sure port matches backend (8082)
+  private baseUrl = 'http://localhost:8082/api'; // Changed from 8081 to 8082
 
   // Add httpOptions here - inside the class
   private httpOptions = {

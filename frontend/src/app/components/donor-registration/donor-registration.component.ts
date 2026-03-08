@@ -4,12 +4,46 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
+import { INDIAN_CITIES } from '../../services/indian-cities'; // <--- ADD THIS IMPORT
 
 @Component({
   selector: 'app-donor-registration',
   standalone: true,
   imports: [FormsModule, RouterLink, CommonModule, HttpClientModule],
   templateUrl: './donor-registration.component.html',
+  // <--- ADD STYLES FOR AUTOCOMPLETE
+  styles: [
+    `
+      .suggestions-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        z-index: 1000;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .suggestion-item {
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .suggestion-item:hover {
+        background-color: #f8f9fa;
+        color: #dc3545;
+      }
+
+      .position-relative {
+        position: relative;
+      }
+    `,
+  ],
 })
 export class DonorRegistrationComponent {
   donor = {
@@ -23,9 +57,48 @@ export class DonorRegistrationComponent {
   };
 
   message = '';
-  isError = false;
+  isError = false; // ✅ This is correct - already here
+
+  // <--- ADD THESE AUTOCOMPLETE PROPERTIES
+  filteredCities: string[] = [];
+  showSuggestions = false;
+  allCities = INDIAN_CITIES;
 
   constructor(private api: ApiService) {}
+
+  // <--- ADD THESE AUTOCOMPLETE METHODS
+  filterCities(event: any) {
+    const searchTerm = event.target.value.toLowerCase();
+
+    if (searchTerm.length >= 1) {
+      this.filteredCities = this.allCities
+        .filter((city) => city.toLowerCase().includes(searchTerm))
+        .slice(0, 10);
+
+      this.showSuggestions = this.filteredCities.length > 0;
+    } else {
+      this.filteredCities = [];
+      this.showSuggestions = false;
+    }
+  }
+
+  onLocationFocus() {
+    if (this.donor.location && this.donor.location.length >= 1) {
+      this.filterCities({ target: { value: this.donor.location } });
+    }
+  }
+
+  hideSuggestions() {
+    setTimeout(() => {
+      this.showSuggestions = false;
+    }, 200);
+  }
+
+  selectCity(city: string) {
+    this.donor.location = city;
+    this.showSuggestions = false;
+    this.filteredCities = [];
+  }
 
   registerDonor() {
     console.log('Submitting donor:', this.donor);
@@ -74,7 +147,6 @@ export class DonorRegistrationComponent {
           lastDonationDate: '',
         };
 
-        // Auto hide message after 3 seconds
         setTimeout(() => (this.message = ''), 3000);
       },
       error: (err) => {

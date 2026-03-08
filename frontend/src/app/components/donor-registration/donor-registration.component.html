@@ -11,6 +11,9 @@
              [(ngModel)]="donor.name" 
              name="name"
              required>
+      <div class="text-danger" *ngIf="donorForm.submitted && !donor.name">
+        Name is required
+      </div>
     </div>
 
     <div class="mb-3">
@@ -23,6 +26,9 @@
              required 
              min="18" 
              max="65">
+      <div class="text-danger" *ngIf="donorForm.submitted && !donor.age">
+        Age is required (18-65)
+      </div>
     </div>
 
     <div class="mb-3">
@@ -32,8 +38,14 @@
               name="bloodGroup" 
               required>
         <option value="">Select Blood Group</option>
-        <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
-        <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+        <option>A+</option>
+        <option>A-</option>
+        <option>B+</option>
+        <option>B-</option>
+        <option>O+</option>
+        <option>O-</option>
+        <option>AB+</option>
+        <option>AB-</option>
       </select>
     </div>
 
@@ -57,14 +69,30 @@
              name="email">
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">Location/City</label>
+    <!-- Location with Autocomplete -->
+    <div class="mb-3 position-relative">
+      <label class="form-label">Location/City <span class="text-danger">*</span></label>
       <input class="form-control" 
              type="text" 
-             placeholder="Location/City" 
+             placeholder="Type your city or village" 
              [(ngModel)]="donor.location" 
              name="location"
-             required>
+             (input)="filterCities($event)"
+             (focus)="onLocationFocus()"
+             (blur)="hideSuggestions()"
+             required
+             autocomplete="off">
+      
+      <div *ngIf="showSuggestions && filteredCities.length > 0" 
+           class="suggestions-dropdown">
+        <div *ngFor="let city of filteredCities" 
+             class="suggestion-item"
+             (mousedown)="selectCity(city)">
+          {{city}}
+        </div>
+      </div>
+      
+      <small class="text-muted">Start typing your city or village name</small>
     </div>
 
     <div class="mb-3">
@@ -87,7 +115,7 @@
       Back
     </button>
 
-    <!-- Fixed: Changed error to isError -->
+    <!-- ✅ FIXED: Changed error to isError -->
     <div *ngIf="message" class="alert mt-3" 
          [class.alert-success]="!isError" 
          [class.alert-danger]="isError">
