@@ -1,0 +1,97 @@
+<div class="container mt-4">
+  <h2>🩸 Donor Registration</h2>
+  
+  <form #donorForm="ngForm" (ngSubmit)="registerDonor()">
+    
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input class="form-control" 
+             type="text" 
+             placeholder="Full Name" 
+             [(ngModel)]="donor.name" 
+             name="name"
+             required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Age</label>
+      <input class="form-control" 
+             type="number" 
+             placeholder="Age" 
+             [(ngModel)]="donor.age" 
+             name="age"
+             required 
+             min="18" 
+             max="65">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Blood Group</label>
+      <select class="form-control" 
+              [(ngModel)]="donor.bloodGroup" 
+              name="bloodGroup" 
+              required>
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Phone</label>
+      <input class="form-control" 
+             type="tel" 
+             placeholder="Phone Number" 
+             [(ngModel)]="donor.phone" 
+             name="phone"
+             required 
+             pattern="[0-9]{10}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Email (Optional)</label>
+      <input class="form-control" 
+             type="email" 
+             placeholder="Email" 
+             [(ngModel)]="donor.email" 
+             name="email">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Location/City</label>
+      <input class="form-control" 
+             type="text" 
+             placeholder="Location/City" 
+             [(ngModel)]="donor.location" 
+             name="location"
+             required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Last Donation Date (Optional)</label>
+      <input class="form-control" 
+             type="date" 
+             [(ngModel)]="donor.lastDonationDate" 
+             name="lastDonationDate">
+    </div>
+
+    <button type="submit" 
+            class="btn btn-success" 
+            [disabled]="!donorForm.form.valid">
+      Register Donor
+    </button>
+    
+    <button type="button" 
+            class="btn btn-secondary ms-2" 
+            routerLink="/">
+      Back
+    </button>
+
+    <!-- Fixed: Changed error to isError -->
+    <div *ngIf="message" class="alert mt-3" 
+         [class.alert-success]="!isError" 
+         [class.alert-danger]="isError">
+      {{message}}
+    </div>
+  </form>
+</div>

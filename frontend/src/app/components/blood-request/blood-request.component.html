@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <h2>Request Blood</h2>
+  <form #requestForm="ngForm" (ngSubmit)="submitRequest()">
+    <div class="mb-3">
+      <input class="form-control" placeholder="Patient Name" [(ngModel)]="request.patientName" name="patientName" required>
+    </div>
+    <div class="mb-3">
+      <select class="form-control" [(ngModel)]="request.bloodGroup" name="bloodGroup" required>
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <input class="form-control" placeholder="Hospital Name" [(ngModel)]="request.hospitalName" name="hospitalName" required>
+    </div>
+    <div class="mb-3">
+      <input class="form-control" placeholder="Location" [(ngModel)]="request.location" name="location" required>
+    </div>
+    <div class="mb-3">
+      <input class="form-control" placeholder="Contact Number" [(ngModel)]="request.contactNumber" name="contactNumber" required>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!requestForm.form.valid">Submit Request</button>
+    <button type="button" class="btn btn-secondary ms-2" routerLink="/">Back</button>
+  </form>
+
+  <div *ngIf="matchingDonors.length > 0" class="mt-4">
+    <h3>Matching Donors ({{matchingDonors.length}})</h3>
+    <ul class="list-group">
+      <li *ngFor="let donor of matchingDonors" class="list-group-item">
+        {{donor.name}} - {{donor.bloodGroup}} - {{donor.phone}}
+      </li>
+    </ul>
+  </div>
+</div>
